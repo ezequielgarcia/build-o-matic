@@ -1,8 +1,6 @@
 function install-ficus {
-	sudo cp arch/arm64/boot/dts/rockchip/rk3399-ficus.dtb /mnt/
-	sudo cp arch/arm64/boot/Image /mnt/
-	sudo cp arch/arm64/boot/Image.gz /mnt/
-	sudo cp arch/arm64/boot/Image.lz4 /mnt/
+	sudo cp ${KBUILD_OUTPUT}/arch/arm64/boot/dts/rockchip/rk3399-ficus.dtb /mnt/
+	sudo cp ${KBUILD_OUTPUT}/arch/arm64/boot/Image /mnt/
 }
 
 function make-neek {
@@ -133,7 +131,7 @@ function make-igep2 {
 	baked
 }
 
-function make-boneblack {
+function __make-boneblack {
 	dtb=arch/arm/boot/dts/am335x-boneblack.dtb
 	LOADADDR=80008000 make -j${bake_jobs} zImage dtbs
 	kernel=arch/arm/boot/zImage
@@ -178,25 +176,25 @@ function make-pxa {
 	baked
 }
 
-function make-ci20z {
-	make -j${bake_jobs} dtbs vmlinuz.bin
-	dtb=arch/mips/boot/dts/ingenic/ci20.dtb
-	cat vmlinuz.bin ${dtb} > vmlinuz.dtb
-	./scripts/mkuboot.sh -A mips -O linux -T kernel -C none -a 0x80010000 -e 0x80010000 -n "linux" -d vmlinuz.dtb /srv/atftp/uImage-ci20
-	baked
-}
-
-function make-ci20u {
-	make -j${bake_jobs} dtbs vmlinux.bin
-	dtb=arch/mips/boot/dts/ingenic/ci20.dtb
-	cat arch/mips/boot/vmlinux.bin ${dtb} > vmlinux.dtb
-	./scripts/mkuboot.sh -A mips -O linux -T kernel -C none -a 0x80010000 -e 0x80010000 -n "linux" -d vmlinux.dtb /srv/atftp/uImage-ci20
-	baked
-}
+#function make-ci20z {
+#	make -j${bake_jobs} dtbs vmlinuz.bin
+#	dtb=arch/mips/boot/dts/ingenic/ci20.dtb
+#	cat vmlinuz.bin ${dtb} > vmlinuz.dtb
+#	./scripts/mkuboot.sh -A mips -O linux -T kernel -C none -a 0x80010000 -e 0x80010000 -n "linux" -d vmlinuz.dtb ${TFTPD_PATH}/uImage-ci20
+#	baked
+#}
+#
+#function make-ci20u {
+#	make -j${bake_jobs} dtbs vmlinux.bin
+#	dtb=${KBUILD_OUTPUT}/arch/mips/boot/dts/ingenic/ci20.dtb
+#	cat arch/mips/boot/vmlinux.bin ${dtb} > vmlinux.dtb
+#	./scripts/mkuboot.sh -A mips -O linux -T kernel -C none -a 0x80010000 -e 0x80010000 -n "linux" -d vmlinux.dtb ${TFTPD_PATH}/uImage-ci20
+#	baked
+#}
 
 function make-ci20 {
 	make -j${bake_jobs} uImage
-	cp -v arch/mips/boot/uImage /srv/atftp/uImage-ci20
+	cp -v ${KBUILD_OUTPUT}/arch/mips/boot/uImage ${TFTPD_PATH}/uImage-ci20
 	baked
 }
 
@@ -224,11 +222,23 @@ function make-frontpanel-v2 {
 	baked
 }
 
+function make-dt-64 {
+	board=$1
+	vendor=$2
+	make -j${bake_jobs} || return
+	mkdir -p ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/Image ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/dts/${vendor}/${board}.dtb ${TFTPD_PATH}/${board}/
+	INSTALL_MOD_PATH=/srv/rootfs/arm64 make modules_install
+	baked
+}
+
 function make-dt {
 	board=$1
-	make -j${bake_jobs}
-	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/zImage /srv/atftp/zImage-${board}
-	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/dts/${board}.dtb /srv/atftp
+	make -j${bake_jobs} || return
+	mkdir -p ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/zImage ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/dts/${board}.dtb ${TFTPD_PATH}/${board}/
 	baked
 }
 
@@ -297,9 +307,6 @@ function make-topkick {
 	make-appended kirkwood-topkick 0x8000
 }
 
-function make-wandboard {
-	make-appended imx6dl-wandboard 0x10008000
-}
 
 function make-riotboard {
 	make-appended imx6dl-riotboard 0x10008000
@@ -311,6 +318,11 @@ function make-sun7i-a20-olinuxino-micro {
 
 # DT boards
 
+function make-sun7i-a20-olinuxino-micro {
+	make-dt sun7i-a20-olinuxino-micro
+	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+}
+
 function make-aquila {
 	make-dt am335x-base0033
 	INSTALL_MOD_PATH=/home/zeta/buildroot/frontpanel-rootfs/rootfs-overlay make modules_install
@@ -318,5 +330,21 @@ function make-aquila {
 
 function make-rock2 {
 	make-dt rk3288-rock2-square
-	baked
+	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+}
+
+function make-ficus {
+	make-dt-64 rk3399-ficus rockchip
+}
+
+function make-boneblack {
+	make-dt am335x-boneblack
+	INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
+}
+
+function make-wandboard {
+	make-dt imx6dl-wandboard
+	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+#	INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
+#	INSTALL_MOD_PATH=/srv/rootfs/imx6_arm make modules_install
 }

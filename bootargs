@@ -1,0 +1,35 @@
+# Ficus RK3399
+setenv bootcmd "setenv bootargs tw686x.dma_mode=contig ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.24:/srv/rootfs/arm64; ext4load mmc 1:1 0x02000000 Image; ext4load mmc 1:1 0x01f00000 rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
+
+setenv bootcmd "setenv bootargs ip=192.168.0.204:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.24:/srv/rootfs/arm64,v3; tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
+
+setenv bootcmd "tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
+
+setenv bootargs "ip=192.168.0.204:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/arm64,v3"
+
+# RK3288
+setenv bootargs "console=tty0 console=ttyS2,115200n8 clk_ignore_unused ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
+
+setenv bootcmd_net "tftpboot 0x02000000 rk3288-rock2-square/zImage; tftpboot 0x04000000 rk3288-rock2-square/rootfs.cpio.uboot; tftpboot 0x01f00000 rk3288-rock2-square/rk3288-rock2-square.dtb; bootz 0x02000000 0x04000000 0x01f00000"
+
+setenv bootcmd_net "tftpboot 0x02000000 rk3288-rock2-square/zImage; tftpboot 0x01f00000 rk3288-rock2-square/rk3288-rock2-square.dtb; bootz 0x02000000 - 0x01f00000"
+
+# BBB
+setenv serverip 192.168.0.10; setenv rootpath /srv/rootfs/arm; setenv nfsopts v3; setenv console ttyS0,115200n; setenv bootfile am335x-boneblack/zImage; setenv fdtfile am335x-boneblack/am335x-boneblack.dtb; run netboot
+
+setenv serverip 192.168.0.27; setenv rootpath /srv/rootfs/arm; setenv nfsopts v3; setenv console ttyS0,115200n; setenv bootfile am335x-boneblack/zImage; setenv fdtfile am335x-boneblack/am335x-boneblack.dtb
+
+netargs=setenv bootargs console=${console} ${optargs} root=/dev/nfs nfsroot=${serverip}:${rootpath},${nfsopts} rw ip=dhcp
+netboot=echo Booting from network ...; setenv autoload no; dhcp; tftp ${loadaddr} ${bootfile}; tftp ${fdtaddr} ${fdtfile}; run netargs; bootz ${loadaddr} - ${fdtaddr}
+
+# IMX6
+setenv bootargs "console=tty0 console=ttymxc0,115200n8 cma=128M ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
+setenv bootcmd_net "tftpboot 0x12000000 imx6dl-wandboard/zImage; tftpboot 0x18000000 imx6dl-wandboard/imx6dl-wandboard.dtb; bootz 0x12000000 - 0x18000000"
+
+# Olinuxino Sunxi A20
+setenv bootargs "console=tty0 console=ttyS0,115200n8 cma=128M ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
+setenv bootcmd "tftpboot 0x42000000 sun7i-a20-olinuxino-micro/zImage; tftpboot 0x43000000 sun7i-a20-olinuxino-micro/sun7i-a20-olinuxino-micro.dtb; bootz 0x42000000 - 0x43000000"
+
+# CI20
+setenv bootargs "console=tty0 console=ttyS0,115200n8 rootwait root=/dev/mmcblk0p1 devtmpfs.mount=1 ip=dhcp"
+setenv bootcmd "tftpboot uImage-ci20; bootm"

@@ -1,3 +1,4 @@
+export TFTPD_PATH=/srv/tftp
 
 function umenv {
 	export ARCH=um
@@ -102,6 +103,28 @@ function mipsenv {
 	echo "MIPS environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
+function ci20env {
+	export ARCH=mips
+	export KBUILD_OUTPUT=/home/zeta/repos/builds/ci20
+	export PATH=$PATH:/home/zeta/repos/buildroot/mips/output/host/usr/bin/
+	export CROSS_COMPILE="mips-linux-gnu-"
+	echo "MIPS environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
+function ficus_rk3399_env {
+	export ARCH=arm64
+	export KBUILD_OUTPUT=/home/zeta/repos/builds/rk3399_ficus
+	export CROSS_COMPILE="aarch64-linux-gnu-"
+	echo "Ficus environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
+function virtmeenv {
+	unset ARCH
+	unset CROSS_COMPILE
+	export KBUILD_OUTPUT=/home/zeta/repos/builds/virtme-x86_64
+	echo "Native environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
 function arm64env {
 	export ARCH=arm64
 	unset KBUILD_OUTPUT
@@ -160,7 +183,7 @@ function rk3288_env {
 	export ARCH=arm
 	export KBUILD_OUTPUT=/home/zeta/repos/builds/rk3288
 	export PATH=$PATH:/home/zeta/repos/buildroot/arm/output/host/usr/bin/
-	export CROSS_COMPILE="/usr/bin/ccache arm-none-linux-gnueabi-"
+	export CROSS_COMPILE="arm-buildroot-linux-uclibcgnueabihf-"
 	echo "ARM environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
@@ -168,7 +191,7 @@ function sun7i_env {
 	export ARCH=arm
 	export KBUILD_OUTPUT=/home/zeta/repos/builds/sun7i
 	export PATH=$PATH:/home/zeta/repos/buildroot/arm/output/host/usr/bin/
-	export CROSS_COMPILE="/usr/bin/ccache arm-none-linux-gnueabi-"
+	export CROSS_COMPILE="arm-buildroot-linux-uclibcgnueabihf-"
 	echo "ARM environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
@@ -200,8 +223,8 @@ function am335x_env {
 	export ARCH=arm
 	export KBUILD_OUTPUT=/home/zeta/repos/builds/am335x
 	export PATH=$PATH:/home/zeta/repos/buildroot/arm/output/host/usr/bin/
-	export CROSS_COMPILE="/usr/bin/ccache arm-none-linux-gnueabi-"
-	echo "AM335X environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+	export CROSS_COMPILE="arm-none-linux-gnueabi-"
+	echo "AM335X environment (you know, the dark beaglebone). ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
 function frontpanel_env {
@@ -215,8 +238,8 @@ function frontpanel_env {
 function imx6_env {
 	export ARCH=arm
 	export KBUILD_OUTPUT=/home/zeta/repos/builds/imx6
-	export PATH=$PATH:/home/zeta/repos/buildroot/riotboard/output/host/usr/bin/
-	export CROSS_COMPILE="/usr/bin/ccache arm-linux-gnueabihf-"
+	export PATH=$PATH:/home/zeta/repos/buildroot/arm/output/host/usr/bin/
+	export CROSS_COMPILE="arm-buildroot-linux-uclibcgnueabihf-"
 	echo "ARM environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
