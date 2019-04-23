@@ -225,19 +225,28 @@ function make-frontpanel-v2 {
 function make-dt-64 {
 	board=$1
 	vendor=$2
-	make -j${bake_jobs} || return
+	make -W=1 -j${bake_jobs} || return
 	mkdir -p ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/Image ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/dts/${vendor}/${board}.dtb ${TFTPD_PATH}/${board}/
-	INSTALL_MOD_PATH=/srv/rootfs/arm64 make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm64 make modules_install
 	baked
 }
 
 function make-dt {
 	board=$1
-	make -j${bake_jobs} || return
+	make -j${bake_jobs} zImage dtbs modules || return
 	mkdir -p ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/zImage ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/dts/${board}.dtb ${TFTPD_PATH}/${board}/
+	baked
+}
+
+function make-dt-u {
+	board=$1
+	LOADADDR=08000000 make -j${bake_jobs} uImage dtbs modules || return
+	mkdir -p ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/uImage ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm/boot/dts/${board}.dtb ${TFTPD_PATH}/${board}/
 	baked
 }
@@ -330,11 +339,15 @@ function make-aquila {
 
 function make-rock2 {
 	make-dt rk3288-rock2-square
-	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
 }
 
 function make-ficus {
 	make-dt-64 rk3399-ficus rockchip
+}
+
+function make-rockpi-4 {
+	make-dt-64 rk3399-rock-pi-4 rockchip
 }
 
 function make-boneblack {
@@ -344,7 +357,12 @@ function make-boneblack {
 
 function make-wandboard {
 	make-dt imx6dl-wandboard
-	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
 #	INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
 #	INSTALL_MOD_PATH=/srv/rootfs/imx6_arm make modules_install
+}
+
+function make-thinci {
+	make-dt-u thinci-vc1500-d1602
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
 }

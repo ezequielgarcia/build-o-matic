@@ -5,7 +5,7 @@ setenv bootcmd "setenv bootargs ip=192.168.0.204:::255.255.255.0:ficus:eth0:on r
 
 setenv bootcmd "tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
 
-setenv bootargs "ip=192.168.0.204:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/arm64,v3"
+setenv bootargs "ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64,v3"
 
 # RK3288
 setenv bootargs "console=tty0 console=ttyS2,115200n8 clk_ignore_unused ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
@@ -23,8 +23,8 @@ netargs=setenv bootargs console=${console} ${optargs} root=/dev/nfs nfsroot=${se
 netboot=echo Booting from network ...; setenv autoload no; dhcp; tftp ${loadaddr} ${bootfile}; tftp ${fdtaddr} ${fdtfile}; run netargs; bootz ${loadaddr} - ${fdtaddr}
 
 # IMX6
-setenv bootargs "console=tty0 console=ttymxc0,115200n8 cma=128M ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
-setenv bootcmd_net "tftpboot 0x12000000 imx6dl-wandboard/zImage; tftpboot 0x18000000 imx6dl-wandboard/imx6dl-wandboard.dtb; bootz 0x12000000 - 0x18000000"
+setenv bootargs "console=tty0 console=ttymxc0,115200n8 cma=128M root=/dev/nfs rw ip=192.168.0.200:::255.255.255.0:wandboard:eth0:on nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm_rootfs,v3"
+setenv bootcmd "tftpboot 0x12000000 imx6dl-wandboard/zImage; tftpboot 0x18000000 imx6dl-wandboard/imx6dl-wandboard.dtb; bootz 0x12000000 - 0x18000000"
 
 # Olinuxino Sunxi A20
 setenv bootargs "console=tty0 console=ttyS0,115200n8 cma=128M ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
@@ -33,3 +33,7 @@ setenv bootcmd "tftpboot 0x42000000 sun7i-a20-olinuxino-micro/zImage; tftpboot 0
 # CI20
 setenv bootargs "console=tty0 console=ttyS0,115200n8 rootwait root=/dev/mmcblk0p1 devtmpfs.mount=1 ip=dhcp"
 setenv bootcmd "tftpboot uImage-ci20; bootm"
+
+# Thinci
+#
+#
