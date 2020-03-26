@@ -1,18 +1,40 @@
+# IMX8MQ EVK
+setenv bootargs "earlycon=ec_imx6q,mmio32,0x30860000 cma=1G console=ttymxc0,115200n8 ip=192.168.0.200:::255.255.255.0:imx8:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v4,tcp"
+setenv bootargs "console=ttymxc0,115200n8 ip=192.168.0.200:::255.255.255.0:imx8:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v3 clk_ignore_unused initcall_debug"
+setenv bootcmd "tftpboot 0x41000000 imx8mq-evk/Image; tftpboot 0x40480000 imx8mq-evk/imx8mq-evk.dtb; booti 0x41000000 - 0x40480000"
+
 # Ficus RK3399
 setenv bootcmd "setenv bootargs tw686x.dma_mode=contig ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.24:/srv/rootfs/arm64; ext4load mmc 1:1 0x02000000 Image; ext4load mmc 1:1 0x01f00000 rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
 
-setenv bootcmd "setenv bootargs ip=192.168.0.204:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.24:/srv/rootfs/arm64,v3; tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
+setenv bootargs "earlycon=uart8250,mmio32,0xff1a0000 console=ttyS2,1500000n8 ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v4,tcp"
+
+setenv bootcmd "setenv bootargs ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v4,tcp; tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
 
 setenv bootcmd "tftpboot 0x02000000 rk3399-ficus/Image; tftpboot 0x01f00000 rk3399-ficus/rk3399-ficus.dtb; booti 0x02000000 - 0x01f00000"
 
-setenv bootargs "ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64,v3"
+# Rockpi
+setenv bootargs 'earlycon=uart8250,mmio32,0xff1a0000 console=ttyS2,1500000n8 ip=192.168.0.200:::255.255.255.0:rockpi:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v4,tcp'; setenv serverip 192.168.0.20; setenv ipaddr 192.168.0.200; tftpboot 0x02000000 rk3399-rock-pi-4/Image; tftpboot 0x01f00000 rk3399-rock-pi-4/rk3399-rock-pi-4.dtb; booti 0x02000000 - 0x01f00000
+
+setenv bootcmd "tftpboot 0x02000000 rk3399-rock-pi-4/Image; tftpboot 0x01f00000 rk3399-rock-pi-4/rk3399-rock-pi-4.dtb; booti 0x02000000 - 0x01f00000"
+
+setenv bootargs 'console=ttyS2,1500000n8 ip=192.168.0.200:::255.255.255.0:rockpi:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v4,tcp'; setenv serverip 192.168.0.20; setenv ipaddr 192.168.0.200; tftpboot 0x02000000 rk3399-rock-pi-4/Image; tftpboot 0x01f00000 rk3399-rock-pi-4/rk3399-rock-pi-4.dtb; booti 0x02000000 - 0x01f00000
+
+setenv bootargs 'ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/dm-0 rw dm-mod.create="dm-linear,,0,rw,0 32768 linear 8:1 0,32768 1024000 linear 8:2 0,1056768 204800 linear 8:3 0,1261568 512000 linear 8:4 0"'; setenv serverip 192.168.0.20; setenv ipaddr 192.168.0.200; tftpboot 0x02000000 rk3399-rock-pi-4/Image; tftpboot 0x01f00000 rk3399-rock-pi-4/rk3399-rock-pi-4.dtb; booti 0x02000000 - 0x01f00000
+
+setenv bootargs "root=/dev/mmcblk2p1 rw earlycon=uart8250,mmio32,0xff1a0000 console=ttyS2,1500000n8 console=tty0 rootwait"; setenv serverip 192.168.0.11; setenv ipaddr 192.168.0.200; tftpboot 0x02000000 rk3399-rock-pi-4/Image; tftpboot 0x01f00000 rk3399-rock-pi-4/rk3399-rock-pi-4.dtb; booti 0x02000000 - 0x01f00000
 
 # RK3288
-setenv bootargs "console=tty0 console=ttyS2,115200n8 clk_ignore_unused ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
+setenv bootargs "console=tty0 console=ttyS2,115200n8 ip=192.168.0.200:::255.255.255.0:rock2:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm_rootfs,v4,tcp"
 
 setenv bootcmd_net "tftpboot 0x02000000 rk3288-rock2-square/zImage; tftpboot 0x04000000 rk3288-rock2-square/rootfs.cpio.uboot; tftpboot 0x01f00000 rk3288-rock2-square/rk3288-rock2-square.dtb; bootz 0x02000000 0x04000000 0x01f00000"
 
 setenv bootcmd_net "tftpboot 0x02000000 rk3288-rock2-square/zImage; tftpboot 0x01f00000 rk3288-rock2-square/rk3288-rock2-square.dtb; bootz 0x02000000 - 0x01f00000"
+
+# Sunxi H3
+setenv bootargs "console=tty0 console=ttyS0,115200n8 ip=192.168.0.200:::255.255.255.0:rock2:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm_rootfs,v3"
+
+setenv bootcmd "tftpboot 0x43000000 sun8i-h3-libretech-all-h3-cc/zImage; tftpboot 0x42000000 sun8i-h3-libretech-all-h3-cc/sun8i-h3-libretech-all-h3-cc.dtb; bootz 0x43000000 - 0x42000000"
+
 
 # BBB
 setenv serverip 192.168.0.10; setenv rootpath /srv/rootfs/arm; setenv nfsopts v3; setenv console ttyS0,115200n; setenv bootfile am335x-boneblack/zImage; setenv fdtfile am335x-boneblack/am335x-boneblack.dtb; run netboot
@@ -26,6 +48,9 @@ netboot=echo Booting from network ...; setenv autoload no; dhcp; tftp ${loadaddr
 setenv bootargs "console=tty0 console=ttymxc0,115200n8 cma=128M root=/dev/nfs rw ip=192.168.0.200:::255.255.255.0:wandboard:eth0:on nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm_rootfs,v3"
 setenv bootcmd "tftpboot 0x12000000 imx6dl-wandboard/zImage; tftpboot 0x18000000 imx6dl-wandboard/imx6dl-wandboard.dtb; bootz 0x12000000 - 0x18000000"
 
+setenv bootargs "console=tty0 console=ttymxc0,115200n8 root=/dev/nfs rw ip=192.168.0.200:::255.255.255.0:riotboard:eth0:on nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm_rootfs,v3"
+setenv bootcmd "tftpboot 0x12000000 imx6dl-riotboard/zImage; tftpboot 0x18000000 imx6dl-riotboard/imx6-riotboard.dtb; bootz 0x12000000 - 0x18000000"
+
 # Olinuxino Sunxi A20
 setenv bootargs "console=tty0 console=ttyS0,115200n8 cma=128M ip=dhcp root=/dev/nfs rw nfsroot=192.168.0.107:/srv/rootfs/linaro-stretch-armhf,v3"
 setenv bootcmd "tftpboot 0x42000000 sun7i-a20-olinuxino-micro/zImage; tftpboot 0x43000000 sun7i-a20-olinuxino-micro/sun7i-a20-olinuxino-micro.dtb; bootz 0x42000000 - 0x43000000"
@@ -36,4 +61,28 @@ setenv bootcmd "tftpboot uImage-ci20; bootm"
 
 # Thinci
 #
-#
+
+bootargs=kmemleak=on earlycon=uart8250,mmio32,0x02010000 console=ttyS0,115200n8 loglevel=8 rw
+bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs ip=${ipaddr}:::255.255.255.0 nfsroot=${serverip}:${nfsdir},nfsvers=3
+bootcmd=run bootargs_nfs; run boot_tftp
+
+
+# Chromebook
+earlyprintk=ttyS2,115200n8
+console=tty1
+console=ttyS2,115200n8
+rockchip.usb_uart=1
+ip=192.168.0.200:::255.255.255.0:ficus:eth0:on root=/dev/nfs rw nfsroot=192.168.0.20:/home/zeta/builds/rootfs/arm64_rootfs,v3
+loglevel=7
+init=/sbin/init
+cros_secure
+root=PARTUUID=%U/PARTNROFF=1
+rootwait
+ro
+dm_verity.error_behavior=3
+dm_verity.max_bios=-1
+dm_verity.dev_wait=0
+dm="1 vroot none ro 1,0 3334144 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=3334144 alg=sha1 root_hexdigest=9e927ada8e761034731591a1863a4fd8bfb1433d salt=935b7a3b25fd08be3bfdd3d841f875392f1ff16d93ac35ed9864d5da4c61482a"
+noinitrd cros_debug
+vt.global_cursor_default=0
+kern_guid=%U

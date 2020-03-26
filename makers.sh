@@ -225,11 +225,14 @@ function make-frontpanel-v2 {
 function make-dt-64 {
 	board=$1
 	vendor=$2
-	make -W=1 -j${bake_jobs} || return
+	ccache -z
+	/usr/bin/time -f "Built $1 in %E" make -W=1 -j${bake_jobs} || return
 	mkdir -p ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/Image ${TFTPD_PATH}/${board}/
+	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/Image.gz ${TFTPD_PATH}/${board}/
 	cp -v ${KBUILD_OUTPUT}/arch/arm64/boot/dts/${vendor}/${board}.dtb ${TFTPD_PATH}/${board}/
-	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm64 make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm64_rootfs make modules_install
+	ccache -s | grep "hit rate"
 	baked
 }
 
@@ -328,8 +331,7 @@ function make-sun7i-a20-olinuxino-micro {
 # DT boards
 
 function make-sun7i-a20-olinuxino-micro {
-	make-dt sun7i-a20-olinuxino-micro
-	INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
+	make-dt sun7i-a20-olinuxino-micro && INSTALL_MOD_PATH=/srv/rootfs/linaro-stretch-armhf make modules_install
 }
 
 function make-aquila {
@@ -338,8 +340,11 @@ function make-aquila {
 }
 
 function make-rock2 {
-	make-dt rk3288-rock2-square
-	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
+	make-dt rk3288-rock2-square && INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm_rootfs make modules_install
+}
+
+function make-h3 {
+	make-dt sun8i-h3-libretech-all-h3-cc && INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm_rootfs make modules_install
 }
 
 function make-ficus {
@@ -350,19 +355,27 @@ function make-rockpi-4 {
 	make-dt-64 rk3399-rock-pi-4 rockchip
 }
 
+function make-imx8mq-evk {
+	make-dt-64 imx8mq-evk freescale
+}
+
 function make-boneblack {
-	make-dt am335x-boneblack
-	INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
+	make-dt am335x-boneblack && INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
+}
+
+function make-riotboard {
+	make-dt imx6dl-riotboard
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm_rootfs make modules_install
 }
 
 function make-wandboard {
 	make-dt imx6dl-wandboard
-	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm_rootfs make modules_install
 #	INSTALL_MOD_PATH=/srv/rootfs/arm make modules_install
 #	INSTALL_MOD_PATH=/srv/rootfs/imx6_arm make modules_install
 }
 
 function make-thinci {
 	make-dt-u thinci-vc1500-d1602
-	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/linaro-stretch-armhf make modules_install
+	INSTALL_MOD_PATH=/home/zeta/builds/rootfs/arm_rootfs make modules_install
 }

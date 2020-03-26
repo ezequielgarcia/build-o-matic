@@ -137,15 +137,15 @@ function ci20env {
 function ficus_rk3399_env {
 	export ARCH=arm64
 	export KBUILD_OUTPUT=/home/zeta/builds/rk3399_ficus
-	export CROSS_COMPILE="aarch64-linux-gnu-"
+	export CROSS_COMPILE="/usr/bin/ccache aarch64-linux-gnu-"
 	echo "Ficus environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
 function rock_pi_4_env {
 	export ARCH=arm64
 	export KBUILD_OUTPUT=/home/zeta/builds/rk3399_rockpi4
-	export CROSS_COMPILE="aarch64-linux-gnu-"
-	echo "Ficus environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+	export CROSS_COMPILE="/usr/bin/ccache aarch64-linux-gnu-"
+	echo "Rock Pi environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
 function virtmeenv {
@@ -153,6 +153,13 @@ function virtmeenv {
 	unset CROSS_COMPILE
 	export KBUILD_OUTPUT=/home/zeta/builds/virtme-x86_64
 	echo "Native environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
+function syzenv {
+	export ARCH=arm64
+	export CROSS_COMPILE=aarch64-linux-gnu-
+	export KBUILD_OUTPUT=/home/zeta/builds/syzenv
+	echo "Syzkaller environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
 function arm64env {
@@ -197,7 +204,7 @@ function rk3288_env {
 	export ARCH=arm
 	export KBUILD_OUTPUT=/home/zeta/builds/rk3288
 	export PATH=$PATH:/home/zeta/buildroot/arm/output/host/usr/bin/
-	export CROSS_COMPILE="arm-linux-gnueabihf-"
+	export CROSS_COMPILE="/usr/bin/ccache arm-linux-gnueabihf-"
 	echo "ARM environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
@@ -254,5 +261,19 @@ function thinci_env {
 	export PATH=$PATH:/home/zeta/buildroot/buildroot/output/host/usr/bin/
 	export CROSS_COMPILE=arm-linux-gnueabihf-
 	echo "Thinci environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
+function imx8vendor_env {
+	export ARCH=arm64
+	export KBUILD_OUTPUT=/home/zeta/builds/imx8_vendor
+	export CROSS_COMPILE="aarch64-linux-gnu-"
+	echo "IMX8 vendor environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
+}
+
+function imx8_env {
+	export ARCH=arm64
+	export KBUILD_OUTPUT=/home/zeta/builds/imx8
+	export CROSS_COMPILE="/usr/bin/ccache aarch64-linux-gnu-"
+	echo "IMX8 environment. ARCH=${ARCH}, CC=${CROSS_COMPILE}"
 }
 
